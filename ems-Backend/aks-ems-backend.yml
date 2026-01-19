@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: ems-backend
+  labels:
+    app: ems-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ems-backend
+  template:
+    metadata:
+      labels:
+        app: ems-backend
+    spec:
+      containers:
+        - name: ems-backend
+          image: ravipract.azurecr.io/ems-backend:latest
+          ports:
+            - containerPort: 8081
+          
+          env:
+          - name: SPRING_DATASOURCE_URL
+            value: jdbc:mysql://mysql:3306/employeedb
+          - name: SPRING_DATASOURCE_USERNAME
+            value: root 
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: root 
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ems-backend
+  labels:
+    app: ems-backend
+spec:
+  type: LoadBalancer
+  selector:
+    app: ems-backend
+  ports:
+  - port: 8081
+    targetPort: 8081

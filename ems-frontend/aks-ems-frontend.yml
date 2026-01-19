@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: ems-frontend
+  labels:
+    app: ems-frontend
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ems-frontend
+  template:
+    metadata:
+      labels:
+        app: ems-frontend
+    spec:
+      containers:
+        - name: ems-frontend
+          image: ravipract.azurecr.io/ems-frontend:v1
+          ports:
+            - containerPort: 5173
+---
+
+apiVersion: v1 
+kind: Service 
+metadata:
+  name: ems-frontend
+  labels:
+    app: ems-frontend
+spec:
+  type: LoadBalancer
+  selector:
+    app: ems-frontend
+  ports:
+    - port: 5173
+      targetPort: 5173
